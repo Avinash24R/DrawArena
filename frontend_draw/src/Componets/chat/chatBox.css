@@ -1,0 +1,100 @@
+.chatbox{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    min-width:250px; /* minimum width, flex will adjust */
+    background:#ffffff;
+    border-left:1px solid #e2e2e2;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.section_title.clickable{
+    cursor: pointer;
+    user-select: none;
+}
+
+/* section titles */
+
+.section_title{
+    font-size:14px;
+    margin-bottom:10px;
+    color:#555;
+}
+
+/* player list */
+
+.playerlist{
+    padding:12px;
+    border-bottom:1px solid #eee;
+}
+
+.player{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:6px;
+}
+
+/* avatar circle */
+
+.player_avatar{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:#007bff;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.player_name{
+    font-size:14px;
+}
+
+/* chat area */
+
+.chatmessages{
+    flex:1;
+    overflow-y:auto;
+    padding:10px;
+}
+
+/* message bubble */
+
+.message{
+    margin-bottom:8px;
+    font-size:14px;
+}
+
+.msg_player{
+    font-weight:bold;
+    color:#007bff;
+    margin-right:5px;
+}
+
+.msg_text{
+    color:#333;
+}
+
+/* input box */
+
+.textbox{
+    border-top:1px solid #eee;
+    padding:10px;
+}
+
+.textbox input{
+    width:100%;
+    padding:8px 10px;
+    border-radius:20px;
+    border:1px solid #ccc;
+    outline:none;
+    font-size:14px;
+}
+
+.textbox input:focus{
+    border-color:#007bff;
+}

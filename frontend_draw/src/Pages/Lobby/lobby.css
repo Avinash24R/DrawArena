@@ -1,0 +1,80 @@
+.lobby {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  margin-top: 80px;
+  padding: 40px 20px;
+  background: #f0f8ff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.lobby button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.lobby button:hover {
+  background: #0056b3;
+}
+
+/* floating bubbles background */
+.lobby::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 20% 20%, rgba(255,255,255,.3) 0%, transparent 60%),
+              radial-gradient(circle at 80% 80%, rgba(255,255,255,.2) 0%, transparent 50%);
+  animation: rotateBg 30s linear infinite;
+  z-index: -2;
+}
+
+.lobby .bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0,123,255,0.15);
+  animation: float 6s ease-in-out infinite;
+}
+
+.lobby .bubble:nth-child(1) {
+  width: 80px;
+  height: 80px;
+  bottom: 10%;
+  left: 10%;
+  animation-duration: 7s;
+}
+.lobby .bubble:nth-child(2) {
+  width: 120px;
+  height: 120px;
+  bottom: 20%;
+  right: 15%;
+  animation-duration: 9s;
+}
+.lobby .bubble:nth-child(3) {
+  width: 50px;
+  height: 50px;
+  bottom: 50%;
+  left: 70%;
+  animation-duration: 5s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0) translateX(0) scale(1); }
+  50% { transform: translateY(-20px) translateX(10px) scale(1.1); }
+  100% { transform: translateY(0) translateX(0) scale(1); }
+}
+
+@keyframes rotateBg {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

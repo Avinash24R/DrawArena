@@ -1,0 +1,35 @@
+.game_area{
+  display:flex;
+  height:100vh;
+  width:100vw;
+}
+
+.game_area .canvas-container{
+  flex:1;
+  min-width:0;   /* prevents overflow */
+}
+
+.game_area .chatbox{
+  width:300px;
+  flex-shrink:0;
+}
+
+/* mobile breakpoint: stack chat below canvas */
+@media (max-width: 768px) {
+  .game_area {
+    flex-direction: column;
+    height: 100vh; /* keep full viewport height */
+  }
+  .game_area .canvas-container {
+    flex: 1;          /* take remaining space above chat */
+    min-height: 0;    /* allow shrinking so chat is visible */
+  }
+  .game_area .chatbox {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;    /* limit chat height */
+    flex-shrink: 0;
+    border-left: none;
+    border-top: 1px solid #e2e2e2;
+  }
+}
