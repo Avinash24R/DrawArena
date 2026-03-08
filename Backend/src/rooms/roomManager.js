@@ -28,7 +28,7 @@ class RoomManager{
         return this.rooms.get(roomId)
     }
 
-    joinroom(roomId , player){
+    joinRoom(roomId , player){
         const room = this.rooms.get(roomId)
 
         if(!room) return null
@@ -45,9 +45,8 @@ class RoomManager{
 
         room.removePlayer(socketId)
 
-        room.removePlayer(socketId)
-        if(room.player.length === 0){
-            this.room.delete(roomId)
+        if(room.players.length === 0){
+            this.rooms.delete(roomId)
         }
     }
 }

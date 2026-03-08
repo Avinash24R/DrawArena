@@ -1,5 +1,3 @@
-import roomManager from "../rooms/roomManager";
-
 const  roomManager = require("../rooms/roomManager")
 
 function createRoom(socket , playerName){
@@ -24,7 +22,7 @@ function joinRoom(socket , roomId , playerName){
         score: 0
     }
 
-    const room = roomManager.joinroom(roomId ,player)
+    const room = roomManager.joinRoom(roomId ,player)
 
     if(!room){
         return null
