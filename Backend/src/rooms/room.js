@@ -30,11 +30,12 @@ class Room {
 
         this.maxrounds = 5
         this.timer = 60
+
+        correctGuessers: new Set()
     }
     addPlayer(player){
         this.players.push(player)
     }
-
     removePlayer(socketId){
         this.players = this.players.filter(
             player => player.id != socketId
