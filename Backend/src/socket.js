@@ -1,6 +1,7 @@
 const roomManager = require("./rooms/roomManager")
 const handleCorrectGuess = require("./utils/HandleCorrectGuess")
 const { createRoom, joinRoom, leaveRoom } = require("./gameController/gameController")
+const {getNextDrawer ,getWordOptions ,startTurn ,startTimer,endTurn,checkRound} = require("./utils/startNextRound")
 
 function setSocketup(io){
     io.on("connection" , (socket) =>{
@@ -11,9 +12,9 @@ function setSocketup(io){
             const room = createRoom(socket , playername)
 
             socket.data.roomId = room.roomId
-            socket.data.playername = room.playername
+            socket.data.playername = playername
 
-            socket.emit("Room Created" , room)
+            socket.emit("room_Created" , room)
     
         })
 
@@ -26,7 +27,7 @@ function setSocketup(io){
             }
             socket.data.roomId = roomId
             socket.data.playername = playername
-            io.to(roomId).emit("room update" , room)
+            io.to(roomId).emit("room_update" , room)
         }) 
 
 
@@ -37,6 +38,16 @@ function setSocketup(io){
                 message
             })
         })
+
+        //drawing
+        socket.on("draw" ,({roomId, line})=>{
+            const room = roomManager.getRoom(roomId)
+
+            if(!room) return
+            // only drawer can draw 
+            if(socket.id !== room.currentDrawer) return
+            socket.to(roomId).emit("draw", line)
+        }) 
 
         // guess
         socket.on("guess" ,({roomId , message})=>{
@@ -55,9 +66,15 @@ function setSocketup(io){
             // prevent multiple guesses
             if(room.correctGuessers.has(socket.id)) return
 
+
+
             if(guess === currentWord){
                 room.correctGuessers.add(socket.id)
                 handleCorrectGuess(room , socket.id)
+
+                clearInterval(room.timerInterval)
+                room.timerInterval = null
+
                 io.to(room.roomId).emit("correct_guess", {
                     guesserId:socket.id,
                     word: room.currentWord,
@@ -71,15 +88,20 @@ function setSocketup(io){
             })
             }
         })
-        //drawing
-        socket.on("draw" ,({roomId, line})=>{
+        
+        socket.on("word_selected" , ({roomId, word}) =>{
             const room = roomManager.getRoom(roomId)
+            if(!room || socket.id !== room.currentDrawer) return
+            room.currentWord = word
+            io.to(room.roomId).emit("turn_started", {
+                drawer: room.currentDrawer,
+                length: word.length
+            })
 
-            if(!room) return
-            // only drawer can draw 
-            if(socket.id !== room.currentDrawer) return
-            socket.to(roomId).emit("draw", line)
-        }) 
+            startTimer(io , room)
+        })
+
+        
 
         //disconnect
         socket.on("disconnect" ,()=>{
@@ -94,4 +116,4 @@ function setSocketup(io){
     })
 
 }
-export default { setSocketup }
+module.exports = { setSocketup }

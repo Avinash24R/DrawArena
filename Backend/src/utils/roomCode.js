@@ -14,4 +14,4 @@ const genratecode = (length = 6) => {
     return code;
 }
 
-export default genratecode;
+module.export = {genratecode};

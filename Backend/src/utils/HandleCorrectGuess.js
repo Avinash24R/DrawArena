@@ -13,4 +13,4 @@ function handleCorrectGuess(room, guesserId){
 
 }
 
-export default {handleCorrectGuess}
+module.export = {handleCorrectGuess}

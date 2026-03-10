@@ -26,12 +26,14 @@ class Room {
         this.status = "waiting"
         this.currentDrawer = null
         this.currentWord = null
-        this.round = 0
+        this.round = 1
 
-        this.maxrounds = 5
+        this.maxrounds = 3
+        this.turnIndex = 0 
         this.timer = 60
+        this.timeInterval = null
 
-        correctGuessers: new Set()
+        this.correctGuessers = new Set()
     }
     addPlayer(player){
         this.players.push(player)

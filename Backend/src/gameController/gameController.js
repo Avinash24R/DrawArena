@@ -39,4 +39,4 @@ function leaveRoom(socket , roomId){
 
 }
 
-export default {createRoom ,joinRoom , leaveRoom};
+module.export = {createRoom ,joinRoom , leaveRoom};
