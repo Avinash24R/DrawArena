@@ -39,4 +39,4 @@ function leaveRoom(socket , roomId){
 
 }
 
-module.export = {createRoom ,joinRoom , leaveRoom};
+module.exports = {createRoom ,joinRoom , leaveRoom};

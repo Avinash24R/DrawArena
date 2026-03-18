@@ -2,7 +2,7 @@
 
 const characterset = "ABCDEFGHIJKLMNOPQRSTUVQXYZ1234567890";
 
-const genratecode = (length = 6) => {
+function genrateRoomcode(length = 6){
     let code = ""
 
     for (let i = 0; i<length; i++){
@@ -14,4 +14,4 @@ const genratecode = (length = 6) => {
     return code;
 }
 
-module.export = {genratecode};
+module.exports = genrateRoomcode;

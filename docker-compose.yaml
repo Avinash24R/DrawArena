@@ -11,7 +11,7 @@ services:
     networks:
       - drawer_network
   backend:
-    build : ./backend
+    build : ./Backend
     container_name: drawer_backend
     ports:
       - "5000:5000"

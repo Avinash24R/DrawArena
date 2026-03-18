@@ -21,7 +21,7 @@ class Room {
         this.roomId = roomId
         this.host = hostSocketId
 
-        this.player = []
+        this.players = []
 
         this.status = "waiting"
         this.currentDrawer = null
