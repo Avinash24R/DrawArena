@@ -8,4 +8,3 @@ Real-Time Multiplayer Drawing Game| React+ WebSockets + Docker-Based System
 - Containerized frontend and backend services using Docker and Nginx, orchestrated with Docker Compose 
 - Integrated PostgreSQL and pgAdmin for data persistence and database management
 
-## fixing  some issues with frontend and docker setup 

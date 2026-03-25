@@ -8,14 +8,16 @@ function setSocketup(io){
         console.log("User Connected:" , socket.id)
 
         //create room
-        socket.on("create_room" ,({playername})  =>{
-            const room = createRoom(socket , playername)
+        socket.on("create_room" ,({playername , maxPlayers})  =>{
+            const room = createRoom(socket , playername ,maxPlayers)
 
             socket.data.roomId = room.roomId
             socket.data.playername = playername
 
-            socket.emit("room_Created" , room)
-    
+            socket.join(room.roomId)
+            socket.emit("room_created" , room)
+
+            io.to(room.roomId).emit("room_update" , room)
         })
 
         //join room
@@ -27,8 +29,27 @@ function setSocketup(io){
             }
             socket.data.roomId = roomId
             socket.data.playername = playername
+
+            socket.join(roomId)
             io.to(roomId).emit("room_update" , room)
+
+            if (room.players.length ===  room.maxPlayers){
+                room.status = "playing"
+                startTurn(io , room)
+            }
         }) 
+
+        socket.on("start_game" , ({roomId}) =>{
+            const room = roomManager.getRoom(roomId)
+
+            room.status = "playing"
+
+            io.to(roomId).emit("game_started" , {
+                roomID
+            })
+
+            startTurn(io , room)
+        })
 
 
         //chat messages
@@ -106,6 +127,8 @@ function setSocketup(io){
         //disconnect
         socket.on("disconnect" ,()=>{
             console.log("User disconected:" , socket.id)
+
+            
             if(socket.data.roomId){
                 leaveRoom(socket  , socket.data.roomId)
 

@@ -1,7 +1,7 @@
 const  roomManager = require("../rooms/roomManager")
 
-function createRoom(socket , playerName){
-    const room = roomManager.createRoom(socket.id)
+function createRoom(socket , playerName, maxPlayers){
+    const room = roomManager.createRoom(socket.id , maxPlayers)
 
     const player = {
         id: socket.id,

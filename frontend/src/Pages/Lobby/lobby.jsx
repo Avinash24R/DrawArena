@@ -1,39 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './lobby.css';
+import { socket } from '../../socket';
 
 function Lobby() {
     const location = useLocation();
+    const { roomSize } = location.state || {}
     const navigate = useNavigate();
-    const { roomSize } = location.state || { roomSize: 0 };
+    const [joined , setJoined] = useState(1)
 
-    // number of people who have joined (including the creator)
-    const [joined, setJoined] = useState(1);
-
+    const {roomId , playerName} = location.state || {}
+    const [room , setRoom] = useState(null)
+    
+    
     useEffect(() => {
-        // in a real app you'd open a websocket/room connection here
-        // and update `joined` as other clients arrive.
-    }, []);
+        if (!roomId) return
+
+        socket.emit("join_room" , {
+            roomId,
+            playerName: playerName
+        })
+        socket.on("room_update" , updateRoom => {
+            setRoom(updateRoom)
+        })
+        return ()=>{
+            socket.off("room_update")
+        }
+        
+    }, [roomId , playerName]);
 
     const handleSimulateJoin = () => {
         setJoined((prev) => Math.min(prev + 1, roomSize));
     };
-
+    //Auto start when room is full
     useEffect(() => {
-        if (joined >= roomSize && roomSize > 0) {
+        if (room && room.players.length >= room.maxPlayers) {
             // everyone is here, go to the drawing canvas
-            navigate('/draw');
+            navigate('/draw' , {state: {roomId}});
         }
-    }, [joined, roomSize, navigate]);
+    }, [room, roomId, navigate]);
 
-    if (roomSize <= 0) {
-        return (
-            <div className="lobby">
-                <h1>Invalid room</h1>
-                <p>No room parameters were provided. Go back to the home page.</p>
-            </div>
-        );
-    }
+    if (!room) {
+        return <div
+className="lobby">Joining room ...</div>    }
+
 
     return (
         <div className="lobby">
@@ -43,10 +53,23 @@ function Lobby() {
             <div className="bubble" />
 
             <h1>Lobby</h1>
-            <p>Room for {roomSize} players</p>
-            <p>{joined} / {roomSize} joined</p>
-            {joined < roomSize && <p>Waiting for players to join...</p>}
-            <button onClick={handleSimulateJoin}>Simulate player join</button>
+            <h2>Room Code: {room.roomId}</h2>
+
+            <p>
+                {room.players.length} / {room.maxPlayers} players joined
+            </p>
+
+            <h3>Players</h3>
+
+            <ul>
+                {room.players.map(p => (
+                <li key={p.id}>{p.name}</li>
+                ))}
+            </ul>
+
+            {room.players.length < room.maxPlayers && (
+                <p>Waiting for players...</p>
+            )}
         </div>
     );
 }

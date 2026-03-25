@@ -1,7 +1,8 @@
 import { useState , useEffect , useRef} from "react";
 import './chatBox.css';
+import {socket} from "../../socket" 
 
-function ChatBox() {
+function ChatBox({roomId}) {
     const [messages , setMessages] = useState([]);
     const [players , setPlayers] = useState([]);
     // message input should be a string, not an array
@@ -12,21 +13,34 @@ function ChatBox() {
 
     const bottomRef = useRef(null);
 
-    useEffect(() => {
-        // dummy data for testing - only set once on mount
-        setPlayers([
-            { id: 1, name: "Alice" },
-            { id: 2, name: "Bob" }
-        ]);
-        setMessages([
-            { player: "Alice", text: "Hello everyone!" },
-            { player: "Bob", text: "Let's draw an apple." }
-        ]);
-    }, []); // empty dependency array
+    useEffect(()=>{
+        socket.on("room_update" , room =>{
+            setPlayers(room.players)
+        })
+
+        return () => socket.off("room_update")
+    }, [])
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView();
-    }, [messages]);
+        socket.on("chat_message" , msg =>{
+            setMessages(prev => [...prev , msg])
+        })
+
+        return () => socket.off("chat_message")
+    }, []);
+
+    useEffect(()=>{
+        socket.on("correct_guess", data =>{
+            setMessages(prev => [
+                ...prev,
+                {
+                    player: "SYSTEM",
+                    text: `Correct guess`   
+                }
+            ])
+        })
+        return () => socket.off("correct_guess")
+    })
     /* example
     [
  {id:1, name:"Alice"},
@@ -41,11 +55,10 @@ function ChatBox() {
    function sendMessage(){
     if(messageInput.trim() === "") return
 
-    const newMessage = {
-        player: "you",
-        text: messageInput
-    }
-    setMessages(prev => [...prev , newMessage])
+    socket.emit("guess" , {
+        roomId,
+        messages: messageInput
+    })
     setMessageInput("")
    }
    return (

@@ -17,7 +17,7 @@ timer : 60s
 */
 
 class Room {
-    constructor(roomId , hostSocketId) {
+    constructor(roomId , hostSocketId , maxPlayers = 8) {
         this.roomId = roomId
         this.host = hostSocketId
 
@@ -32,6 +32,7 @@ class Room {
         this.turnIndex = 0 
         this.timer = 60
         this.timeInterval = null
+        this.maxPlayers = maxPlayers
 
         this.correctGuessers = new Set()
     }

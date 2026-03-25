@@ -5,19 +5,19 @@ class RoomManager{
     constructor(){
         this.rooms = new Map()
     }
-    createRoom(hostSocketId){
+    createRoom(hostSocketId , maxPlayers){
         let roomId = genrateRoomcode()
         const max_attempts = 50
         
-            var limit = 0;
-            while (this.rooms.has(roomId)){
-                if (limit >= max_attempts){
-                    throw new Error("Unable to genratecode unique room code")
-                }
-                roomId = genrateRoomcode()
-                limit++
+        var limit = 0;
+        while (this.rooms.has(roomId)){
+            if (limit >= max_attempts){
+                throw new Error("Unable to genratecode unique room code")
             }
-        const room = new Room(roomId , hostSocketId)
+            roomId = genrateRoomcode()
+            limit++
+        }
+        const room = new Room(roomId , hostSocketId , maxPlayers)
 
         this.rooms.set(roomId , room)
 
